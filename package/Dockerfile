@@ -1,4 +1,7 @@
-FROM php:7.1-apache
+#
+#
+#
+FROM php:8.2-apache-bullseye
 
 RUN a2enmod rewrite
 
@@ -16,12 +19,12 @@ RUN apt-get -qq update && apt-get -qq -y --no-install-recommends install \
     imagemagick
 
 # install the PHP extensions we need
-RUN docker-php-ext-install -j$(nproc) iconv mcrypt \
+RUN docker-php-ext-install -j$(nproc) iconv \
     pdo pdo_mysql mysqli gd
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 
 RUN curl -J -L -s -k \
-    'https://github.com/omeka/omeka-s/releases/download/v2.1.2/omeka-s-2.1.2.zip' \
+    'https://github.com/omeka/omeka-s/releases/download/v4.0.1/omeka-s-4.0.1.zip' \
     -o /var/www/omeka-s.zip \
     &&  unzip -q /var/www/omeka-s.zip -d /var/www/ \
     &&  rm /var/www/omeka-s.zip \
@@ -29,10 +32,30 @@ RUN curl -J -L -s -k \
     &&  mv /var/www/omeka-s /var/www/html \
     &&  chown -R www-data:www-data /var/www/html
 
-COPY ./database.ini /var/www/html/config/database.ini
-COPY ./imagemagick-policy.xml /etc/ImageMagick/policy.xml
-COPY ./.htaccess /var/www/html/.htaccess
+#VOLUME /var/www/html
 
-VOLUME /var/www/html
+# Specify home
+ENV APP_HOME /omeka-s
+WORKDIR ${APP_HOME}
 
-CMD ["apache2-foreground"]
+# .profile
+COPY package/data/container_bash_profile /root/.profile
+
+# make necessary directories
+RUN mkdir -p ${APP_HOME}/scripts ${APP_HOME}/config
+
+# port and run command
+EXPOSE 80
+CMD ${APP_HOME}/scripts/entry.sh
+
+# configuration and scripts
+#COPY package/config/database.ini.template /var/www/html/config/database.ini
+COPY package/config/imagemagick-policy.xml /etc/ImageMagick/policy.xml
+COPY package/config/.htaccess /var/www/html/.htaccess
+COPY package/config/database.ini.template config/database.ini.template
+COPY package/scripts/entry.sh ${APP_HOME}/scripts/entry.sh
+COPY package/scripts/make-ini-file.sh ${APP_HOME}/scripts/make-ini-file.sh
+
+#
+# end of file
+#

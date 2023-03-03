@@ -49,12 +49,12 @@ EXPOSE 80
 CMD ${APP_HOME}/scripts/entry.sh
 
 # configuration and scripts
-#COPY package/config/database.ini.template /var/www/html/config/database.ini
 COPY package/config/imagemagick-policy.xml /etc/ImageMagick/policy.xml
 COPY package/config/.htaccess /var/www/html/.htaccess
-COPY package/config/database.ini.template config/database.ini.template
+COPY package/config/database.ini.template ${APP_HOME}/config/database.ini.template
+COPY package/config/local.config.php.template ${APP_HOME}/config/local.config.php.template
 COPY package/scripts/entry.sh ${APP_HOME}/scripts/entry.sh
-COPY package/scripts/make-ini-file.sh ${APP_HOME}/scripts/make-ini-file.sh
+COPY package/scripts/make-config-files.sh ${APP_HOME}/scripts/make-config-files.sh
 
 #
 # end of file

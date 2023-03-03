@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# generate the ini file
-scripts/make-ini-file.sh
+# generate the config files
+scripts/make-config-files.sh
 
 # redirect to standout/stderr
 ln -sf /proc/$$/fd/1 /var/log/apache2/access.log

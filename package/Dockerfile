@@ -1,7 +1,7 @@
 #
 #
 #
-FROM php:8.2-apache-bullseye
+FROM public.ecr.aws/docker/library/php:8.2-apache-bookworm
 
 RUN a2enmod rewrite
 
@@ -24,7 +24,7 @@ RUN docker-php-ext-install -j$(nproc) iconv \
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 
 RUN curl -J -L -s -k \
-    'https://github.com/omeka/omeka-s/releases/download/v4.0.1/omeka-s-4.0.1.zip' \
+    'https://github.com/omeka/omeka-s/releases/download/v4.0.4/omeka-s-4.0.4.zip' \
     -o /var/www/omeka-s.zip \
     &&  unzip -q /var/www/omeka-s.zip -d /var/www/ \
     &&  rm /var/www/omeka-s.zip \

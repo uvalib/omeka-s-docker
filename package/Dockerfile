@@ -5,7 +5,7 @@ FROM public.ecr.aws/docker/library/php:8.2-apache-bookworm
 
 RUN a2enmod rewrite
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qq update && apt-get -qq -y --no-install-recommends install \
     curl \
     unzip \
@@ -24,7 +24,7 @@ RUN docker-php-ext-install -j$(nproc) iconv \
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 
 RUN curl -J -L -s -k \
-    'https://github.com/omeka/omeka-s/releases/download/v4.1.0/omeka-s-4.1.0.zip' \
+    'https://github.com/omeka/omeka-s/releases/download/v4.1.1/omeka-s-4.1.1.zip' \
     -o /var/www/omeka-s.zip \
     &&  unzip -q /var/www/omeka-s.zip -d /var/www/ \
     &&  rm /var/www/omeka-s.zip \
@@ -35,7 +35,7 @@ RUN curl -J -L -s -k \
 #VOLUME /var/www/html
 
 # Specify home
-ENV APP_HOME /omeka-s
+ENV APP_HOME=/omeka-s
 WORKDIR ${APP_HOME}
 
 # .profile

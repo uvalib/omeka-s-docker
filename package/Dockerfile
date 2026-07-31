@@ -24,7 +24,7 @@ RUN docker-php-ext-install -j$(nproc) iconv \
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 
 RUN curl -J -L -s -k \
-    'https://github.com/omeka/omeka-s/releases/download/v4.1.1/omeka-s-4.1.1.zip' \
+    'https://github.com/omeka/omeka-s/releases/download/v4.2.1/omeka-s-4.2.1.zip' \
     -o /var/www/omeka-s.zip \
     &&  unzip -q /var/www/omeka-s.zip -d /var/www/ \
     &&  rm /var/www/omeka-s.zip \
